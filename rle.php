@@ -25,40 +25,19 @@
     }
 
     function decode_rle($str) {
-        // $compteur = 1;
         $result = "";
-        // TODO gestion d'erreur complete
-        if ($str == null)
+        // TODO gestion d'erreur complete (if 2 alpha follow each other)
+        if ($str == null || !ctype_alnum($str))
         return "$$$";
         for ($i = 0; $i < strlen($str); $i++) {
             $compteur = 0;
-            // echo $i + $compteur." ";
-            // echo (substr($str, $i + $compteur, 1))." ";
-            // echo (ctype_digit(substr($str, $i + $compteur, 1)));
             while (ctype_digit(substr($str, $i + $compteur, 1))) {
                 $compteur++;
-                // echo (substr($str, $i + $compteur, 1));
-                // echo "ici";
-                // echo $compteur." ";
             }
-            // $compteur--;
-            // echo $compteur." ";
-            // $compteur++;
-            // echo $compteur." ";
-            // $compteur--;
-            // echo intval(substr($str, $i, $compteur + 1));
             $HM_to_concat = intval(substr($str, $i, $compteur));
-            // echo $HM_to_concat;
-            // return;
             $result = $result . str_repeat(substr($str, $i + $compteur, 1), $HM_to_concat);
             $i += $compteur;
-            // echo "\n".$HM_to_concat."\n";
-            // for ($HM_to_concat; $HM_to_concat > 0; $HM_to_concat--) {
-                // echo $result;
-                // $result = $result . substr($str, $i + 1, 1);
-            // }
         }
-        // echo $result;
         return $result;
     }
 
@@ -85,7 +64,12 @@
         }
     }
 
+    function read_mbp_to_hex($path) {
+        fopen($path);
+    }
+
     encode_rle($str_example1);
     decode_rle($str_example2);
     encode_advanced_rle($str_example3);
+    read_mbp_to_hex("./src/Super-Champignon.bmp");
 ?>
