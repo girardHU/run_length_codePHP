@@ -13,7 +13,6 @@
 
         for ($i = 0; $i < strlen($str); $i++) {
             $tempo_char = substr($str, $i, 1);
-            if ($tempo_char)
             if (substr($str, $i + 1, 1) != $tempo_char) {
                 $result = $result . $tempo_nb . $tempo_char;
                 $tempo_nb = 1;
@@ -42,6 +41,7 @@
     }
 
     function encode_advanced_rle($str) {
+        $str = str_replace(" ", "", $str);
         if (!ctype_xdigit($str)) {
             echo "$$$";
             return "$$$";
@@ -49,27 +49,35 @@
         $first_couple = "";
         $next_couple = "";
         $how_much = 0;
+        $result = "";
 
         for ($i = 0; $i < strlen($str); $i += 2) {
             $first_couple = substr($str, $i, 2);
             $next_couple = substr($str, $i + 2, 2);
             $how_much = 1;
-            if ($first_couple == $next_couple) {
-                $how_much++;
-            } else {
+            if ($first_couple == $next_couple) { // case 01
+                while ($first_couple == $next_couple) {
+                    $how_much++;
+                    $i += 2;
+                    $first_couple = substr($str, $i, 2);
+                    $next_couple = substr($str, $i + 2, 2);
+                }
+                $result = $result . $how_much . " " . $first_couple. " ";
+            } else { // case 02
                 while($first_couple != $next_couple) {
                     
                 }
             }
         }
+        echo $result;
     }
 
-    function read_mbp_to_hex($path) {
-        fopen($path);
-    }
+    // function read_mbp_to_hex($path) {
+    //     fopen($path);
+    // }
 
-    encode_rle($str_example1);
-    decode_rle($str_example2);
+    // encode_rle($str_example1);
+    // decode_rle($str_example2);
     encode_advanced_rle($str_example3);
-    read_mbp_to_hex("./src/Super-Champignon.bmp");
+    // read_mbp_to_hex("./src/Super-Champignon.bmp");
 ?>
