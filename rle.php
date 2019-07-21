@@ -49,6 +49,7 @@
         $first_couple = "";
         $next_couple = "";
         $how_much = 0;
+        $unique_patterns = "";
         $result = "";
 
         for ($i = 0; $i < strlen($str); $i += 2) {
@@ -62,11 +63,22 @@
                     $first_couple = substr($str, $i, 2);
                     $next_couple = substr($str, $i + 2, 2);
                 }
+                if ($how_much < 10)
+                    $how_much = "0" . $how_much;
                 $result = $result . $how_much . " " . $first_couple. " ";
             } else { // case 02
                 while($first_couple != $next_couple) {
-                    
+                    $how_much++;
+                    $unique_patterns = $unique_patterns . " " . $first_couple;
+                    $i += 2;
+                    $first_couple = substr($str, $i, 2);
+                    $next_couple = substr($str, $i + 2, 2);
                 }
+                $how_much--;
+                if ($how_much < 10)
+                    $how_much = "0" . $how_much;
+                $result = $result . "00 " . $how_much . $unique_patterns . " ";
+                $i -= 2;
             }
         }
         echo $result;
