@@ -132,17 +132,38 @@
     function read_mbp_to_hex($path) {
         $string = file_get_contents($path);
         $output = "";
-        for ($i = 0; $i < strlen($string); $i++) {
-            $output .= dechex(ord(substr($string, $i, 1)));
+        echo "in TOHEX func : \n";
+        for ($i = 0; $i < 50; $i++) {
+            echo "|". $i . "|  ";
+            $tempo_hex = strtoupper(dechex(ord(substr($string, $i, 1))));
+            if (strlen($tempo_hex) == 1)
+                $tempo_hex = "0" . $tempo_hex;
+            $output .= $tempo_hex;
+            echo "hex:\t" . $tempo_hex . "\t";
+            echo "avant:\t" . substr($string, $i, 1) . "\t";
+            echo "apres:\t" . chr(hexdec(dechex(ord(substr($string, $i, 1))))) . "\n";
         }
-        echo $output;
-        return 0;
+        return $output;
+    }
+
+    function create_mbp_from_hex($path, $hex_str) {
+        $str_chepaqoa = "";
+        echo "in TOBMP func : \n";
+        for ($i = 0; $i < 100; $i += 2) {
+            echo "|". $i / 2 . "|\t";
+            $str_chepaqoa .= chr(hexdec(substr($hex_str, $i, 2)));
+            echo "substring:\t" . substr($hex_str, $i, 2) . "\t";
+            echo "senseconverted:\t" . chr(hexdec(substr($hex_str, $i, 2))) . "\n";
+        }
+        // echo "ICI: " . mb_detect_encoding($str_chepaqoa);
+        $image_ressource = imagecreatefromstring($str_chepaqoa);
+        imagebmp($image_ressource, $path, NULL);
     }
 
     // encode_rle($str_example1);
     // decode_rle($str_example2);
     // encode_advanced_rle($str_example3);
-    read_mbp_to_hex("./src/Super-Champignon.bmp");
+    create_mbp_from_hex('./src/SC_decode.bmp', read_mbp_to_hex("./src/Super-Champignon.bmp"));
     // decode_advanced_rle($str_example4);
     // read_mbp_to_hex("./src/Super-Champignon.bmp");
 ?>
