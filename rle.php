@@ -133,7 +133,7 @@
         $string = file_get_contents($path);
         $output = "";
         echo "in TOHEX func : \n";
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < strlen($string); $i++) {
             echo "|". $i . "|  ";
             $tempo_hex = strtoupper(dechex(ord(substr($string, $i, 1))));
             if (strlen($tempo_hex) == 1)
@@ -149,7 +149,7 @@
     function create_mbp_from_hex($path, $hex_str) {
         $str_chepaqoa = "";
         echo "in TOBMP func : \n";
-        for ($i = 0; $i < 100; $i += 2) {
+        for ($i = 0; $i < strlen($hex_str); $i += 2) {
             echo "|". $i / 2 . "|\t";
             $str_chepaqoa .= chr(hexdec(substr($hex_str, $i, 2)));
             echo "substring:\t" . substr($hex_str, $i, 2) . "\t";
