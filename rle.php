@@ -88,6 +88,7 @@
     }
 
     function decode_advanced_rle($str) {
+        echo "string is :" . $str . "\n";
         $str = str_replace(" ", "", $str);
         // TODO gestion d'erreur complete
         if (!ctype_alnum($str)) {
@@ -108,14 +109,18 @@
                 // echo $first_couple;
                 // echo "\n";
                 // echo gettype($first_couple);
-                echo "Houston, first_couple est pas un nombre\n";
+                echo "Houston, first_couple n'est pas un nombre\n";
                 return -1;
             } else if ($first_couple == "00") { // character de controle
-                echo "j'ai just pas encore gerer le char de controle hehe\n";
+                for($j = 0; $j < $next_couple; $j++) {
+                    $result = $result . substr($str, $i + $j, 2);
+                    echo " attempt :" . $result . "\n";
+                }
+                echo "j'ai juste pas encore gerer le char de controle hehe\n";
                 return -1;
             } else { // un nombre qui n'est pas 00
                 $result = $result . str_repeat($next_couple, $first_couple);
-                echo " resultat :" . $result;
+                echo " resultat :" . $result . "\n";
             }
         }
 
@@ -124,13 +129,20 @@
         return $result;
     }
 
-    // function read_mbp_to_hex($path) {
-    //     fopen($path);
-    // }
+    function read_mbp_to_hex($path) {
+        $string = file_get_contents($path);
+        $output = "";
+        for ($i = 0; $i < strlen($string); $i++) {
+            $output .= dechex(ord(substr($string, $i, 1)));
+        }
+        echo $output;
+        return 0;
+    }
 
     // encode_rle($str_example1);
     // decode_rle($str_example2);
     // encode_advanced_rle($str_example3);
-    decode_advanced_rle($str_example4);
+    read_mbp_to_hex("./src/Super-Champignon.bmp");
+    // decode_advanced_rle($str_example4);
     // read_mbp_to_hex("./src/Super-Champignon.bmp");
 ?>
