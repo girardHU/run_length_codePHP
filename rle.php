@@ -49,7 +49,7 @@
     function encode_advanced_rle($path_to_encode, $result_path) {
         $str = read_mbp_to_hex($path_to_encode);
         // TODO gestion d'erreur complete
-        if (!ctype_xdigit($str) || filetype($path_to_encode) == "file" || exif_imagetype($path_to_encode) != IMAGETYPE_BMP) {
+        if (!ctype_xdigit($str) || filetype($path_to_encode) !== "file" || exif_imagetype($path_to_encode) != IMAGETYPE_BMP) {
             return "$$$";
         }
         $first_couple = "";
@@ -91,7 +91,7 @@
             }
         }
         create_and_write($result_path, $result);
-        return 0;
+        return $result_path;
     }
 
     function decode_advanced_rle($path_to_decode, $result_path) {
@@ -103,35 +103,27 @@
         $compteur = 0;
         $handle = fopen($path_to_decode, "r");
         $str = fread($handle, filesize($path_to_decode));
-        if (!ctype_alnum($str)) {
-            echo "$$$";
+        if (!ctype_alnum($str))
             return "$$$";
-        }
 
         for ($i = 0; $i < strlen($str); $i += 4) {
             $first_couple = substr($str, $i, 2);
             $next_couple = substr($str, $i + 2, 2);
-            if (!ctype_digit($first_couple)) { // gestion err : pas un nombre
-                echo $first_couple;
-                echo "Houston, first_couple n'est pas un nombre\n";
-                echo $result;
-                return -1;
-            } else if ($first_couple == "00") { // character de controle
+            if (!ctype_digit($first_couple)) // gestion err : pas un nombre
+                return "$$$";
+            if ($first_couple == "00") { // character de controle
                 $compteur = 0;
                 for($j = 0; $j < $next_couple; $j++) {
                     $result .= substr($str, $i + $j + 4 + $compteur, 2);
-                    echo " attempt :" . $result . "\n";
                     $compteur += 1;
                 }
                 $i += $next_couple * 2;
-            } else { // un nombre qui n'est pas 00
+            } else // un nombre qui n'est pas 00
                 $result .= str_repeat($next_couple, $first_couple);
-            }
         }
 
-
-    create_mbp_from_hex($result_path, $result);
-    return 0;
+        create_mbp_from_hex($result_path, $result);
+        return $result_path;
     }
 
     function read_mbp_to_hex($path) {
@@ -147,11 +139,11 @@
     }
 
     function create_mbp_from_hex($path, $hex_str) {
-        $str_chepaqoa = "";
+        $str = "";
         for ($i = 0; $i < strlen($hex_str); $i += 2) {
-            $str_chepaqoa .= chr(hexdec(substr($hex_str, $i, 2)));
+            $str .= chr(hexdec(substr($hex_str, $i, 2)));
         }
-        $image_ressource = imagecreatefromstring($str_chepaqoa);
+        $image_ressource = imagecreatefromstring($str);
         imagebmp($image_ressource, $path, NULL);
     }
 
@@ -162,7 +154,7 @@
     }
 
     // echo encode_rle($str_example1);
-    echo decode_rle($str_example2);
-    echo encode_advanced_rle("./src/toto.bmp", "./src/test");
-    // echo decode_advanced_rle("./src/test", "./src/test_decoded.bmp");
+    // echo decode_rle($str_example2);
+    // echo encode_advanced_rle("./src/image.bmp", "./src/image_compiled");
+    // echo decode_advanced_rle("./src/image_compiled", "./src/test_decoded.bmp");
 ?>
