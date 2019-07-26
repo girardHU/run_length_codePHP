@@ -8,7 +8,6 @@
         $tempo_char = 0;
         $tempo_nb = 1;
         $result = "";
-        // TODO gestion d'erreur complete
         if ($str == null || !ctype_alpha($str))
             return "$$$";
 
@@ -42,9 +41,7 @@
     }
 
     function encode_advanced_rle($path_to_encode, $result_path) {
-        // $str = str_replace(" ", "", $str);
         $str = read_mbp_to_hex($path_to_encode);
-        // $str = "424DF63003000000000036000000";
         // TODO gestion d'erreur complete
         if (!ctype_xdigit($str)) {
             echo "$$$";
@@ -61,9 +58,6 @@
             $next_couple = substr($str, $i + 2, 2);
             $how_much = 1;
             $unique_patterns = "";
-            // echo "__ " . $result . " __\n";
-
-            // if ($first_couple == "")
 
             if ($first_couple == $next_couple) { // case same pattern
                 while ($first_couple == $next_couple) {
@@ -78,33 +72,24 @@
 
             } else { // case unique pattern
                 while($first_couple != $next_couple) {
-                    // echo " FIRST " . $first_couple . " " . $next_couple . "\t";
                     $how_much++;
                     $unique_patterns .= $first_couple;
                     $i += 2;
                     $first_couple = substr($str, $i, 2);
                     $next_couple = substr($str, $i + 2, 2);
-                    // echo "j'y suis\n";
                 }
                 $how_much--;
                 if ($how_much < 10)
                     $how_much = "0" . $how_much;
-                // echo " HERE " . $unique_patterns . " HERE\n";
                 $result .= "00" . $how_much . $unique_patterns;
                 $i -= 2;
-                // echo "TT". $i."   ";
             }
         }
-        // echo "final result: " . $result . "\n";
-        // echo $result;
         create_and_write($result_path, $result);
-        // echo $result;
         return 0;
     }
 
     function decode_advanced_rle($path_to_decode, $result_path) {
-        // echo "string is :" . $str . "\n";
-        // $str = str_replace(" ", "", $str);
         // TODO gestion d'erreur complete
         $first_couple = "";
         $next_couple = "";
@@ -121,12 +106,8 @@
         for ($i = 0; $i < strlen($str); $i += 4) {
             $first_couple = substr($str, $i, 2);
             $next_couple = substr($str, $i + 2, 2);
-            // echo $next_couple;
-            // echo "\n";
             if (!ctype_digit($first_couple)) { // gestion err : pas un nombre
                 echo $first_couple;
-                // echo "\n";
-                // echo gettype($first_couple);
                 echo "Houston, first_couple n'est pas un nombre\n";
                 echo $result;
                 return -1;
@@ -138,13 +119,8 @@
                     $compteur += 1;
                 }
                 $i += $next_couple * 2;
-                // echo $i;
-                // echo "j'ai juste pas encore gerer le char de controle hehe\n";
-                // return -1;
             } else { // un nombre qui n'est pas 00
-                // echo "yo: " . str_repeat($next_couple, $first_couple) . "\n";
                 $result .= str_repeat($next_couple, $first_couple);
-                // echo " resultat :" . $result . "\n";
             }
         }
 
@@ -156,31 +132,20 @@
     function read_mbp_to_hex($path) {
         $string = file_get_contents($path);
         $output = "";
-        // echo "in TOHEX func : \n";
         for ($i = 0; $i < strlen($string); $i++) {
-            // echo "|". $i . "|  ";
             $tempo_hex = strtoupper(dechex(ord(substr($string, $i, 1))));
             if (strlen($tempo_hex) == 1)
                 $tempo_hex = "0" . $tempo_hex;
             $output .= $tempo_hex;
-            // echo "hex:\t" . $tempo_hex . "\t";
-            // echo "avant:\t" . substr($string, $i, 1) . "\t";
-            // echo "apres:\t" . chr(hexdec(dechex(ord(substr($string, $i, 1))))) . "\n";
         }
-        // echo $output;
         return $output;
     }
 
     function create_mbp_from_hex($path, $hex_str) {
         $str_chepaqoa = "";
-        // echo "in TOBMP func : \n";
         for ($i = 0; $i < strlen($hex_str); $i += 2) {
-            // echo "|". $i / 2 . "|\t";
             $str_chepaqoa .= chr(hexdec(substr($hex_str, $i, 2)));
-            // echo "substring:\t" . substr($hex_str, $i, 2) . "\t";
-            // echo "senseconverted:\t" . chr(hexdec(substr($hex_str, $i, 2))) . "\n";
         }
-        // echo "ICI: " . mb_detect_encoding($str_chepaqoa);
         $image_ressource = imagecreatefromstring($str_chepaqoa);
         imagebmp($image_ressource, $path, NULL);
     }
