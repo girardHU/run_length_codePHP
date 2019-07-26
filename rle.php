@@ -1,8 +1,8 @@
 <?php
-    $str_example1 = "WWWWWWWWWWWWBWWWWWWWWWWWWBBBWWWWWWWWWWWWWWWWWWWWWWWWBWWWWWWWWWWWWWW";
-    $str_example2 = "12W1B12W3B24W1B14W";
-    $str_example3 = "ffff ffff ffff 0909 ff4A 6BC0 D2ff ffff 0000 0000";
-    $str_example4 = "06 ff 02 09 00 05 ff 4A 6B C0 D2 03 ff 04 00";
+    // $str_example1 = "WWWWWWWWWWWWBWWWWWWWWWWWWBBBWWWWWWWWWWWWWWWWWWWWWWWWBWWWWWWWWWWWWWW";
+    // $str_example2 = "12W1B12W3B24W1B14W";
+    // $str_example3 = "ffff ffff ffff 0909 ff4A 6BC0 D2ff ffff 0000 0000";
+    // $str_example4 = "06 ff 02 09 00 05 ff 4A 6B C0 D2 03 ff 04 00";
 
     function encode_rle($str) {
         $tempo_char = 0;
