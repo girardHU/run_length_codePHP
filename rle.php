@@ -49,8 +49,7 @@
     function encode_advanced_rle($path_to_encode, $result_path) {
         $str = read_mbp_to_hex($path_to_encode);
         // TODO gestion d'erreur complete
-        if (!ctype_xdigit($str)) {
-            echo "$$$";
+        if (!ctype_xdigit($str) || filetype($path_to_encode) == "file" || exif_imagetype($path_to_encode) != IMAGETYPE_BMP) {
             return "$$$";
         }
         $first_couple = "";
@@ -162,18 +161,8 @@
         fclose($file);
     }
 
-    function recup($path) {
-        $handle = fopen($path, "r");
-        $str = fread($handle, filesize($path));
-        create_mbp_from_hex($path, $str);
-        fclose($handle);
-    }
-
-    // encode_rle($str_example1);
+    // echo encode_rle($str_example1);
     echo decode_rle($str_example2);
-    // encode_advanced_rle("./src/toto.bmp", "./src/test");
-    // decode_advanced_rle("./src/test", "./src/test_decoded.bmp");
-    // recup("./src/Super-Champignon.bmp");
-    // create_mbp_from_hex('./src/SC_decode.bmp', read_mbp_to_hex("./src/Super-Champignon.bmp"));
-    // read_mbp_to_hex("./src/Super-Champignon.bmp");
+    echo encode_advanced_rle("./src/toto.bmp", "./src/test");
+    // echo decode_advanced_rle("./src/test", "./src/test_decoded.bmp");
 ?>
