@@ -25,11 +25,15 @@
 
     function decode_rle($str) {
         $result = "";
-        // TODO gestion d'erreur complete (if 2 alpha follow each other)
+        // TODO check if number to print is greater than 99 ```TESTED```
+        // TODO check if an alpha is here without number ```TESTED```
+        // TODO check if the strings doesnt end with an alpha ```TESTED```
         if ($str == null || !ctype_alnum($str))
         return "$$$";
         for ($i = 0; $i < strlen($str); $i++) {
             $compteur = 0;
+            if (ctype_alpha(substr($str, $i + $compteur, 1)))
+                return "$$$";
             while (ctype_digit(substr($str, $i + $compteur, 1))) {
                 $compteur++;
             }
@@ -37,6 +41,8 @@
             $result = $result . str_repeat(substr($str, $i + $compteur, 1), $HM_to_concat);
             $i += $compteur;
         }
+        if (ctype_digit(substr($str, -1, 1)))
+            return "$$$";
         return $result;
     }
 
@@ -164,9 +170,9 @@
     }
 
     // encode_rle($str_example1);
-    // decode_rle($str_example2);
-    encode_advanced_rle("./src/toto.bmp", "./src/test");
-    decode_advanced_rle("./src/test", "./src/test_decoded.bmp");
+    echo decode_rle($str_example2);
+    // encode_advanced_rle("./src/toto.bmp", "./src/test");
+    // decode_advanced_rle("./src/test", "./src/test_decoded.bmp");
     // recup("./src/Super-Champignon.bmp");
     // create_mbp_from_hex('./src/SC_decode.bmp', read_mbp_to_hex("./src/Super-Champignon.bmp"));
     // read_mbp_to_hex("./src/Super-Champignon.bmp");
