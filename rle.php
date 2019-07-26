@@ -44,6 +44,7 @@
     function encode_advanced_rle($path_to_encode, $result_path) {
         // $str = str_replace(" ", "", $str);
         $str = read_mbp_to_hex($path_to_encode);
+        // $str = "424DF63003000000000036000000";
         // TODO gestion d'erreur complete
         if (!ctype_xdigit($str)) {
             echo "$$$";
@@ -59,6 +60,8 @@
             $first_couple = substr($str, $i, 2);
             $next_couple = substr($str, $i + 2, 2);
             $how_much = 1;
+            $unique_patterns = "";
+            // echo "__ " . $result . " __\n";
 
             // if ($first_couple == "")
 
@@ -71,23 +74,28 @@
                 }
                 if ($how_much < 10)
                     $how_much = "0" . $how_much;
-                $result = $result . $how_much . $first_couple;
+                $result .= $how_much . $first_couple;
 
             } else { // case unique pattern
                 while($first_couple != $next_couple) {
+                    // echo " FIRST " . $first_couple . " " . $next_couple . "\t";
                     $how_much++;
-                    $unique_patterns = $unique_patterns . $first_couple;
+                    $unique_patterns .= $first_couple;
                     $i += 2;
                     $first_couple = substr($str, $i, 2);
                     $next_couple = substr($str, $i + 2, 2);
+                    // echo "j'y suis\n";
                 }
                 $how_much--;
                 if ($how_much < 10)
                     $how_much = "0" . $how_much;
-                $result = $result . "00" . $how_much . $unique_patterns;
+                // echo " HERE " . $unique_patterns . " HERE\n";
+                $result .= "00" . $how_much . $unique_patterns;
                 $i -= 2;
+                // echo "TT". $i."   ";
             }
         }
+        // echo "final result: " . $result . "\n";
         // echo $result;
         create_and_write($result_path, $result);
         // echo $result;
@@ -141,7 +149,7 @@
         }
 
 
-    echo $result;
+    create_mbp_from_hex($result_path, $result);
     return 0;
     }
 
@@ -192,7 +200,7 @@
 
     // encode_rle($str_example1);
     // decode_rle($str_example2);
-    // encode_advanced_rle("./src/Super-Champignon.bmp", "./src/test");
+    encode_advanced_rle("./src/toto.bmp", "./src/test");
     decode_advanced_rle("./src/test", "./src/test_decoded.bmp");
     // recup("./src/Super-Champignon.bmp");
     // create_mbp_from_hex('./src/SC_decode.bmp', read_mbp_to_hex("./src/Super-Champignon.bmp"));
